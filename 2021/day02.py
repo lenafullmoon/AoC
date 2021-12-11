@@ -2,21 +2,18 @@ if __name__ == '__main__':
     with open('src/day02.txt') as fp:
         inputs_ = fp.read()
 
-    horizontal, depth = 0, 0
-    horizontal_aim, depth_aim, aim = 0, 0, 0
+    horizontal = 0
+    depth_1_aim_2 = 0
+    depth_2 = 0
     for line in inputs_.splitlines():
-        direction, number = line.split()
-        x = int(number)
+        direction, dx = [int(x) if x.isdecimal() else x for x in line.split()]
         if direction == 'forward':
-            horizontal_aim += x
-            depth_aim += aim * x
-            horizontal += x
+            depth_2 += depth_1_aim_2 * dx
+            horizontal += dx
         if direction == 'down':
-            aim += x
-            depth += x
+            depth_1_aim_2 += dx
         if direction == 'up':
-            aim -= x
-            depth -= x
+            depth_1_aim_2 -= dx
 
-    print(horizontal * depth)
-    print(horizontal_aim * depth_aim)
+    print(horizontal * depth_1_aim_2)
+    print(horizontal * depth_2)

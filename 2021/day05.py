@@ -6,37 +6,24 @@ def draw_line(point_a, point_b):
     while True:
         dotted_line.append((i, j))
         if i == point_b[0] and j == point_b[1]:
-            break
-        if i != point_b[0]:
-            i += dir_x
-        if j != point_b[1]:
-            j += dir_y
-    return dotted_line
+            return dotted_line
+        i += dir_x if i != point_b[0] else 0
+        j += dir_y if j != point_b[1] else 0
 
 
 if __name__ == '__main__':
     with open('src/day05.txt') as fp:
         inputs_ = fp.read()
 
-    lines = []
-    for line in inputs_.splitlines():
-        a, b = line.split(' -> ')
-        a = a.split(',')
-        b = b.split(',')
-        lines.append(((int(a[0]), int(a[1])), (int(b[0]), int(b[1]))))
-    dots_1 = {}
-    dots_2 = {}
-    for line in lines:
-        for dot in draw_line(line[0], line[1]):
-            if dot not in dots_2:
-                dots_2[dot] = 1
-            else:
-                dots_2[dot] += 1
-            if line[0][0] == line[1][0] or line[0][1] == line[1][1]:
-                if dot not in dots_1:
-                    dots_1[dot] = 1
-                else:
-                    dots_1[dot] += 1
+    freq_1 = {}
+    freq_2 = {}
+    for row in inputs_.splitlines():
+        a0, a1, b0, b1 = row.replace(' -> ', ',').split(',')
+        a0, a1, b0, b1 = int(a0), int(a1), int(b0), int(b1)
+        for dot in draw_line((a0, a1), (b0, b1)):
+            freq_2[dot] = freq_2[dot] + 1 if dot in freq_2 else 1
+            if a0 == b0 or a1 == b1:
+                freq_1[dot] = freq_1[dot] + 1 if dot in freq_1 else 1
 
-    print(sum(1 if v > 1 else 0 for v in dots_1.values()))
-    print(sum(1 if v > 1 else 0 for v in dots_2.values()))
+    print(sum(1 for v in freq_1.values() if v > 1))
+    print(sum(1 for v in freq_2.values() if v > 1))

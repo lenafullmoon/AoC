@@ -2,10 +2,8 @@ import re
 
 
 def common_bit_at(index, lines, invert=False):
-    if sum(1 if line[index] == '1' else -1 for line in lines) >= 0:
-        return '1' if not invert else '0'
-    else:
-        return '0' if not invert else '1'
+    bit_1 = sum(1 if line[index] == '1' else -1 for line in lines) >= 0
+    return '1' if (bit_1 and not invert) or (not bit_1 and invert) else '0'
 
 
 def common_to_bin_to_dec(lines, invert=False):
@@ -13,8 +11,7 @@ def common_to_bin_to_dec(lines, invert=False):
     return int(''.join(commons), 2)
 
 
-def sift_by_common_bit(input_lines, invert=False):
-    lines = input_lines.copy()
+def sift_by_common_bit(lines, invert=False):
     regex = ''
     while True:
         regex += common_bit_at(len(regex), lines, invert)

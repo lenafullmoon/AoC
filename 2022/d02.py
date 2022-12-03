@@ -18,7 +18,7 @@ def from_outcome(opponent, outcome):
 
 
 if __name__ == '__main__':
-    with open('src/d02.txt') as fp:
+    with open('inputs/d02.txt') as fp:
         inputs_ = fp.read()
     points1, points2 = 0, 0
     for row in inputs_.splitlines(keepends=False):

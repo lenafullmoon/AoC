@@ -1,6 +1,6 @@
 if __name__ == '__main__':
 
-    with open('src/d01.txt') as fp:
+    with open('inputs/d01.txt') as fp:
         inputs_ = fp.read()
 
     calories_carried = [0]

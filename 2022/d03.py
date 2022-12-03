@@ -3,7 +3,7 @@ def priority(c: str):
 
 
 if __name__ == '__main__':
-    with open('src/d03.txt') as fp:
+    with open('inputs/d03.txt') as fp:
         inputs_ = fp.read().split('\n')
     print(sum(priority(
         (set(r[:int(len(r) / 2)]) & set(r[int(len(r) / 2):])).pop()

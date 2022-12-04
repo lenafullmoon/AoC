@@ -1,30 +1,17 @@
-inputs_ = '''2-4,6-8
-2-3,4-5
-5-7,7-9
-2-8,3-7
-6-6,4-6
-2-6,4-8'''
-
 if __name__ == '__main__':
     with open('inputs/d04.txt') as fp:
         inputs_ = fp.read()
-    count1 = 0
-    count2 = 0
+
+    res_1, res_2 = 0, 0
     for pair in inputs_.splitlines(keepends=False):
-        range1, range2 = pair.split(',')
-        range1 = range1.split('-')
-        range2 = range2.split('-')
+        cleaning_range1, cleaning_range2 = pair.split(',')
+        cleaning_range1 = [int(limit) for limit in cleaning_range1.split('-')]
+        cleaning_range2 = [int(limit) for limit in cleaning_range2.split('-')]
+        areas1 = set(range(cleaning_range1[0], cleaning_range1[1] + 1))
+        areas2 = set(range(cleaning_range2[0], cleaning_range2[1] + 1))
 
-        if int(range1[0]) >= int(range2[0]) and int(range1[1]) <= int(range2[1]):
-            count1 += 1
-            print(pair)
-        elif int(range1[0]) <= int(range2[0]) and int(range1[1]) >= int(range2[1]):
-            count1 += 1
-            print(pair)
+        res_1 += 1 if not areas1 - areas2 or not areas2 - areas1 else 0
+        res_2 += 1 if areas1 & areas2 else 0
 
-        if set(range(int(range1[0]), int(range1[1]) + 1)) & set (range(int(range2[0]), int(range2[1]) + 1)):
-            count2+= 1
-
-    print(count1)
-    print(count2)
-
+    print(res_1)
+    print(res_2)

@@ -1,15 +1,14 @@
+def find_start_code(inputs, code_length):
+    code_buffer = [inputs[0]] * code_length
+    for i in range(len(inputs) - code_length):
+        code_buffer[i % code_length] = inputs[i]
+        if len(set(code_buffer)) == code_length:
+            return i + 1
+
+
 if __name__ == '__main__':
     with open('inputs/d06.txt') as fp:
         inputs_ = fp.read()
-    code = [inputs_[0]] * 4
-    for i in range(len(inputs_) - 4):
-        code[i % 4] = inputs_[i]
-        if len(set(code)) == 4:
-            print(i + 1)
-            break
-    code = [inputs_[0]] * 14
-    for i in range(len(inputs_) - 14):
-        code[i % 14] = inputs_[i]
-        if len(set(code)) == 14:
-            print(i + 1)
-            break
+
+    print(find_start_code(inputs_, code_length=4))  # package start
+    print(find_start_code(inputs_, code_length=14))  # message start

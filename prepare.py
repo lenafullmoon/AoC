@@ -1,5 +1,6 @@
 import datetime
 import os
+import requests
 
 
 def create_file(path, content):
@@ -13,7 +14,17 @@ def create_file(path, content):
 if __name__ == '__main__':
     year, month, day = str(datetime.date.today()).split('-')
 
-    create_file(os.path.join(year, 'inputs', f'd{day}.txt'), '')
+    try:
+        input_content = requests.get(
+             f'https://adventofcode.com/{year}/day/{int(day)}/input',
+             headers={'cookie': os.environ.get('SESSION_ID')}
+        ).content.decode().strip()
+    except:
+        input_content = ''
+        print('Could not populate input file!')
+
+    create_file(os.path.join(year, 'inputs', f'd{day}.txt'), input_content)
+
     create_file(os.path.join(year, f'd{day}.py'), f"""inputs_ = ''''''
 
 if __name__ == '__main__':

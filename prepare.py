@@ -25,12 +25,14 @@ if __name__ == '__main__':
 
     create_file(os.path.join(year, 'inputs', f'd{day}.txt'), input_content)
 
-    create_file(os.path.join(year, f'd{day}.py'), f"""inputs_ = ''''''
+    create_file(os.path.join(year, f'd{day}.py'), f"""
+inputs_ = ''''''
 
 if __name__ == '__main__':
     # with open('inputs/d{day}.txt') as fp:
     #     inputs_ = fp.read()
-    pass
+    for row in inputs_.splitlines(keepends=False):
+        pass
 """)
 
     print('Have fun!')

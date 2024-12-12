@@ -1,16 +1,3 @@
-
-inputs_ = '''RRRRIICCFF
-RRRRIICCCF
-VVRRRCCFFF
-VVRCCCJFFF
-VVVVCJJCFE
-VVIVCCJJEE
-VVIIICJJEE
-MIIIIIJJEE
-MIIISIJEEE
-MMMISSJEEE'''
-
-
 class Position:
     def __init__(self, i, j):
         self.i = i
@@ -18,6 +5,9 @@ class Position:
 
     def __add__(self, other):
         return Position(self.i + other.i, self.j + other.j)
+
+    def __sub__(self, other):
+        return Position(self.i - other.i, self.j - other.j)
 
     def __repr__(self):
         return f'({self.i}, {self.j})'
@@ -36,6 +26,10 @@ class Direction:
     LEFT = Position(0, -1)
 
     order = [UP, RIGHT, DOWN, LEFT]
+
+    @classmethod
+    def turn(cls, direction):
+        return cls.order[(cls.order.index(direction) + 1) % len(cls.order)]
 
 
 class Territory:
@@ -68,14 +62,43 @@ class Region:
     def area(self):
         return len(self.positions)
 
-    def parameter(self, terr):
-        borders = set()
+    def borders(self, terr):
+        borders = {}
         for pos in self.positions:
             for d in Direction.order:
                 if terr.in_bounds(pos + d) and terr[pos + d] == self.name:
                     continue
-                borders.add((pos, d))
-        return len(borders)
+                if pos not in borders:
+                    borders[pos] = []
+                borders[pos].append(d)
+        return borders
+
+    def parameter(self, terr):
+        return sum(len(v) for v in self.borders(terr).values())
+
+    def sides(self, terr):
+        borders = self.borders(terr)
+        corners_turned = 0
+        for pos, fences in borders.items():
+            if len(fences) == 4:
+                corners_turned += 4
+            if len(fences) == 3:
+                corners_turned += 2
+            if len(fences) == 2 and fences[0] + fences[1] != Position(0, 0):
+                corners_turned += 1
+            for f in fences:
+                if pos + f + Direction.turn(f) in borders:
+                    next_border = pos + f + Direction.turn(f)
+                    next_border_face = Direction.turn(
+                        Direction.turn(Direction.turn(f))
+                    )
+                    inner_corner = pos - next_border_face
+                    if next_border_face in borders[next_border]:
+                        if (terr.in_bounds(inner_corner)
+                                and terr[inner_corner] == terr[pos]):
+                            corners_turned += 1
+
+        return corners_turned
 
 
 def find_region(p, terr: Territory, region=None):
@@ -104,4 +127,7 @@ if __name__ == '__main__':
             assigned_region = assigned_region.union(new_region.positions)
 
     print(sum(region.area() * region.parameter(territory)
+              for region in regions))
+
+    print(sum(region.area() * region.sides(territory)
               for region in regions))

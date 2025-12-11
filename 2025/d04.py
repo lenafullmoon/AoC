@@ -1,15 +1,3 @@
-
-inputs_ = '''..@@.@@@@.
-@@@.@.@.@@
-@@@@@.@.@@
-@.@@@@..@.
-@@.@@@@.@@
-.@@@@@@@.@
-.@.@.@.@@@
-@.@@@.@@@@
-.@@@@@@@@.
-@.@.@@@.@.'''
-
 def is_available(x, y, matrix):
     if matrix[x][y] != '@':
         return False
@@ -30,11 +18,24 @@ def is_available(x, y, matrix):
 if __name__ == '__main__':
     with open('inputs/d04.txt') as fp:
         inputs_ = fp.read()
-    paper_grid = inputs_.splitlines(keepends=False)
-    available_rolls = 0
-    for i in range(len(paper_grid)):
-        for j in range(len(paper_grid[0])):
-            if is_available(i, j, paper_grid):
-                available_rolls += 1
+    paper_grid = [
+        [x for x in row] for row in inputs_.splitlines(keepends=False)
+    ]
+    print(paper_grid)
+    total_available_rolls = 0
+    while True:
+        available_rolls = 0
+        new_grid = [[x for x in row] for row in paper_grid]
+        for i in range(len(paper_grid)):
+            for j in range(len(paper_grid[0])):
+                if is_available(i, j, paper_grid):
+                    available_rolls += 1
+                    new_grid[i][j] = '.'
+        paper_grid = new_grid
 
-    print(available_rolls)
+        if total_available_rolls == 0:
+            print(available_rolls)
+        total_available_rolls += available_rolls
+        if available_rolls == 0:
+            break
+    print(total_available_rolls)
